@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "Django MySQL",
+            "database": "django_db",
+            "username": "root",
+            "password": "@Geo2020"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
