@@ -12,7 +12,7 @@
             "name": "Django MySQL",
             "database": "django_db",
             "username": "root",
-            "password": "@Geo2020."
+            "password": "@Geo2020"
         }
     ],
     "sqltools.useNodeRuntime": true
