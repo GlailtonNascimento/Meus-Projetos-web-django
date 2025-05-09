@@ -1,24 +1,22 @@
-from django.shortcuts import render  # Para renderizar templates HTML / To render HTML templates
-from django.http import HttpResponse    # Para retornar respostas HTTP simples / To return simple HTTP responses
-from django.views import View          # Classe base para criar views / Base class for creating views
-from .forms import ReservationForm    # Importa o formulário de reserva / Imports the reservation form
+from django.shortcuts import render
+from .forms import ReservationForm
 
-# Create your views here./# Crie suas views aqui.
 def hello_World(request):
     return HttpResponse("Hello World!")
 
-class HelloEthiopia(View):
-    def get(self, request):
-        return HttpResponse("Hello Ethiopia!")
-    
-
 def home(request):
-    form = ReservationForm()  # Inicializa o formulário uma vez.
+    form = ReservationForm()  # Inicializa o formulário vazio
+    reservation_success = False  # Variável para controle de sucesso
+    
     if request.method == 'POST':
         form = ReservationForm(request.POST)
         if form.is_valid():
-            # Process the data in form.cleaned_data/ # Processar os dados em form.cleaned_data.
-            return HttpResponse("Reservation successful!")
-            
-    return render(request, 'index.html', {'form': form})
+            # Aqui você pode processar os dados do formulário, por exemplo, salvar no banco de dados
+            form.save()  # Salvar a reserva no banco de dados
+            reservation_success = True  # Indica que a reserva foi realizada com sucesso
+            form = ReservationForm()  # Reseta o formulário para um novo preenchimento
+
+    return render(request, 'index.html', {'form': form, 'reservation_success': reservation_success})
+
+
    

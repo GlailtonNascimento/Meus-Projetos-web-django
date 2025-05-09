@@ -1,18 +1,41 @@
-
 <!DOCTYPE html>
-<html lang="en-pt">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservations</title>
 </head>
+
 <body>
+    <h1>Reserva de Assento</h1>
     <form method="POST">
         {% csrf_token %}
-        {{form.as_p}}
-       <button type="submit">Save</button>
-    
+
+        <!-- Exibe as mensagens de erro, se houver -->
+        {% if form.errors %}
+        <div style="color: red;">
+            <ul>
+                {% for field in form %}
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Renderiza o formulário -->
+        {{ form.as_p }}
+
+        <!-- Botão de envio -->
+        <button type="submit">Salvar</button>
     </form>
-    
+
+    <!-- Mensagem de sucesso, caso a reserva tenha sido realizada -->
+    {% if reservation_success %}
+    <p>Reserva realizada com sucesso!</p>
+    {% endif %}
 </body>
+
 </html>
