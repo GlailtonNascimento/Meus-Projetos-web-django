@@ -71,12 +71,18 @@ WSGI_APPLICATION = 'firstproject.wsgi.application'
 
 # Banco de dados SQLite (padrão para desenvolvimento)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+   'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_db',
+        'USER': 'root',
+        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
-
 
 # Validações de senha para usuários
 AUTH_PASSWORD_VALIDATORS = [

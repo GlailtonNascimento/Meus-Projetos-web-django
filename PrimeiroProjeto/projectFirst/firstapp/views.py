@@ -1,12 +1,23 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.views import View
+from .forms import ReservationForm
+from .models import Reservation
 
-# View baseada em função
-def hello_world(request):
-    return HttpResponse("Hello, world!")
+def home(request):
+    form = ReservationForm()
+    reservations = None
 
-# View baseada em classe
-class HelloEthiopia(View):
-    def get(self, request):
-        return HttpResponse("Hello, Ethiopia!")
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            instance = form.save()  # salva no banco de dados
+            reservations = [instance]  # exibe apenas essa reserva salva
+            return render(request, 'index.html', {
+                'form': ReservationForm(),  # form limpo para nova entrada
+                'reservations': reservations,
+                'success_message': 'Reserva realizada com sucesso!'
+            })
+
+    return render(request, 'index.html', {
+        'form': form,
+        'reservations': reservations
+    })
