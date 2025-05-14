@@ -1,31 +1,40 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from datetime import date
+
 
 class MenuItem(models.Model):
-    """
-    Modelo para representar um item de menu.
-    """
-    name = models.CharField(max_length=255)         # Nome do item
-    price = models.IntegerField()                   # Preço do item
-    description = models.TextField()                # Descrição do item
+    name = models.CharField(max_length=255)
+    price = models.IntegerField()
+    description = models.TextField()
 
     def __str__(self):
         return self.name
 
 
 class Reservation(models.Model):
-    """
-    Modelo para representar uma reserva.
-    """
-    first_name = models.CharField(max_length=255)       # Nome do cliente
-    last_name = models.CharField(max_length=255)        # Sobrenome do cliente
-    email = models.EmailField()                         # Email do cliente
-    contact = models.CharField(max_length=20)           # Telefone de contato
-    guest_count = models.IntegerField()                 # Número de convidados
-    reservation_time = models.DateTimeField(auto_now=True)  # Atualiza automaticamente a cada salvamento
-    comments = models.TextField(max_length=1000, blank=True)  # Comentários adicionais (opcional)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    cpf = models.CharField(max_length=14, unique=True)
+    email = models.EmailField()
+    contact = models.CharField(max_length=20)
+    guest_count = models.IntegerField()
+    reservation_date = models.DateField()
+    comments = models.TextField(max_length=1000, blank=True)
+
+    def clean(self):
+        max_people_per_day = 30
+        total = Reservation.objects.filter(
+            reservation_date=self.reservation_date
+        ).exclude(pk=self.pk).aggregate(
+            models.Sum('guest_count')
+        )['guest_count__sum'] or 0
+
+        if total + self.guest_count > max_people_per_day:
+            raise ValidationError(
+                _(f"Limite de {max_people_per_day} pessoas atingido para a data {self.reservation_date}.")
+            )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-
-    
