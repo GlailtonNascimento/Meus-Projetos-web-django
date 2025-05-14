@@ -88,7 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internacionalização
-LANGUAGE_CODE = 'en'  # Idioma do projeto
+LANGUAGE_CODE = 'pt-br'  # Idioma do projeto
 
 TIME_ZONE = 'America/Sao_Paulo'  # Fuso horário
 
