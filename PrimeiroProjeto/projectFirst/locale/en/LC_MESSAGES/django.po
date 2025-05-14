@@ -1,0 +1,50 @@
+# English translations for your Django project
+# Copyright (C) 2025 Glailton Nascimento
+# This file is distributed under the same license as the Django project.
+# Glailton Nascimento <glailtonprogramador88@gmail.com>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Django Project\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-14 09:43-0300\n"
+"PO-Revision-Date: 2025-05-14 10:20-0300\n"
+"Last-Translator: Glailton Nascimento <glailtonprogramador88@gmail.com>\n"
+"Language-Team: English <en@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\firstapp\forms.py:10 .\firstapp\forms.py:23
+msgid "Nome"
+msgstr "First Name"
+
+#: .\firstapp\forms.py:11
+msgid "Preço"
+msgstr "Price"
+
+#: .\firstapp\forms.py:12
+msgid "Descrição"
+msgstr "Description"
+
+#: .\firstapp\forms.py:24
+msgid "Sobrenome"
+msgstr "Last Name"
+
+#: .\firstapp\forms.py:25
+msgid "E-mail"
+msgstr "Email"
+
+#: .\firstapp\forms.py:26
+msgid "Contato"
+msgstr "Phone"
+
+#: .\firstapp\forms.py:27
+msgid "Número de Convidados"
+msgstr "Number of Guests"
+
+#: .\firstapp\forms.py:28
+msgid "Comentários"
+msgstr "Comments"

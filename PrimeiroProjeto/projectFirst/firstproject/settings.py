@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # <-- ADICIONAR AQUI
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -87,13 +88,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internacionalização
-LANGUAGE_CODE = 'pt-br'  # Idioma do projeto
+LANGUAGE_CODE = 'en'  # Idioma do projeto
 
 TIME_ZONE = 'America/Sao_Paulo'  # Fuso horário
 
 USE_I18N = True  # Ativa tradução
 
 USE_TZ = True  # Usa timezone nativo
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',  # Diretório onde ficarão os arquivos de tradução
+]
 
 
 # Configurações de arquivos estáticos (CSS, JavaScript, imagens)
