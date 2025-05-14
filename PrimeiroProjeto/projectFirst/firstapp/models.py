@@ -33,7 +33,7 @@ class Reservation(models.Model):
 
         if total + self.guest_count > max_people_per_day:
             raise ValidationError(
-                _(f"Limite de {max_people_per_day} pessoas atingido para a data {self.reservation_date}.")
+                _(f"Limite de {max_people_per_day} pessoas, atingido para essa data. {self.reservation_date}.")
             )
 
     def __str__(self):
