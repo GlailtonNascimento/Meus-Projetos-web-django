@@ -41,10 +41,44 @@
             background-color: #0056b3;
         }
 
-        .message {
-            color: green;
-            font-weight: bold;
+        /* Estilos para as mensagens do Django */
+        .messages {
+            list-style: none;
+            padding: 0;
             margin: 15px 0;
+        }
+
+        .messages li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .messages .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .messages .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .messages .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .reservations {
@@ -54,10 +88,26 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        li {
+        .reservations ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        .reservations li {
             margin-bottom: 15px;
             line-height: 1.6;
+            border-bottom: 1px dashed #eee;
+            /* Adicionado para separar as reservas */
+            padding-bottom: 10px;
         }
+
+        .reservations li:last-child {
+            border-bottom: none;
+            /* Remove a linha do último item */
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
 
         hr {
             border: 1px solid #ccc;
@@ -67,6 +117,15 @@
 </head>
 
 <body>
+
+    {# Bloco para exibir mensagens do Django #}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+    </ul>
+    {% endif %}
 
     <h1>Fazer uma Nova Reserva</h1>
     <form method="POST">
@@ -84,10 +143,7 @@
         <button type="submit" name="search_cpf">Buscar</button>
     </form>
 
-    {% if success_message %}
-    <p class="message">{{ success_message }}</p>
-    {% endif %}
-
+    {# O bloco 'if reservations' é o que controla a exibição das reservas encontradas #}
     {% if reservations %}
     <div class="reservations">
         <h2>Reservas Encontradas</h2>
@@ -102,11 +158,12 @@
                 <strong>Data da Reserva:</strong> {{ r.reservation_date|date:"d/m/Y" }}<br>
                 <strong>Comentários:</strong> {{ r.comments }}
             </li>
+            {% empty %} {# Isto exibe uma mensagem se 'reservations' for uma lista vazia, mas você já tem a
+            mensagem.info no views.py #}
+            <li>Nenhuma reserva encontrada para o CPF informado.</li>
             {% endfor %}
         </ul>
     </div>
-    {% elif search_form.is_bound %}
-    <p>Nenhuma reserva encontrada para o CPF informado.</p>
     {% endif %}
 
 </body>

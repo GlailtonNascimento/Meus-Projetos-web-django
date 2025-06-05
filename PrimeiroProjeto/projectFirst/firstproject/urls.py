@@ -1,13 +1,13 @@
-"""
-Configuração de URLs para o projeto firstproject.
-
-Mais informações: https://docs.djangoproject.com/pt-br/5.2/topics/http/urls/
-"""
-
+# projectFirst/firstproject/urls.py
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include 
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('firstapp.urls')),  # Inclui as URLs da aplicação 'firstapp'
+    # ESTA LINHA ESTÁ CORRETA E É ESSENCIAL:
+    path('', include('firstapp.urls')), 
+    # REMOVA OU COMENTE ESTA LINHA:
+    # path("home", views.home, name="home_raiz"), 
 ]
