@@ -1,4 +1,7 @@
 Meus Projetos Web com Django
+
+
+
 📝 Descrição
 Bem-vindo ao meu portfólio de desenvolvimento web, focado em projetos construídos com o poderoso framework Django em Python.
 
@@ -33,6 +36,7 @@ Projetos de e-commerce.
 Aplicações com integração de APIs externas.
 Sistemas de autenticação e autorização mais complexos.
 Projetos explorando Django REST Framework para APIs.
+
 🤝 Contribuição e Feedback
 Sinta-se à vontade para explorar os projetos! Se você tiver alguma dúvida, sugestão ou quiser oferecer feedback, por favor, abra uma Issue ou entre em contato.
 
