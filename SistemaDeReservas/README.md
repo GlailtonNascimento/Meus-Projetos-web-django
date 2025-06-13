@@ -83,7 +83,7 @@ Certifique-se de ter o seguinte software instalado em seu sistema:
                 'ENGINE': 'django.db.backends.mysql',
                 'NAME': 'django_db',
                 'USER': 'root',
-                'PASSWORD': '@123', # <-- ATENÇÃO: Altere para a sua senha do MySQL!
+                'PASSWORD': '*******', # <-- ATENÇÃO: Altere para a sua senha do MySQL!
                 'HOST': 'localhost',
                 'PORT': '3306',
                 'OPTIONS': {
