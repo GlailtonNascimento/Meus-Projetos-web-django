@@ -6,20 +6,22 @@ Gerado com 'django-admin startproject' usando Django 5.2.
 Para mais informações, veja:
 https://docs.djangoproject.com/pt-br/5.2/topics/settings/
 """
-
+import os
 from pathlib import Path
 
 # Caminho base do projeto (BASE_DIR / 'subpasta')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ATENÇÃO: Mantenha esta chave em segredo em produção!
-SECRET_KEY = 'django-insecure-$t6vf(itrc=137*v+(d-_fg=kjkrwvw1#3l8&-0$1^9p$b^)f'
+# A chave secreta agora será lida de uma variável de ambiente no PythonAnywhere
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-$t6vf(itrc=137*v+(d-_fg=kjkrwvw1#3l8&-0$1^9p$b^)f')
 
 # ATENÇÃO: Não ative o modo DEBUG em produção
-DEBUG = True
+DEBUG = False
 
 # Lista de hosts permitidos a acessar o projeto (em produção)
-ALLOWED_HOSTS = []
+# Substitua 'GlailtonNascimento88.pythonanywhere.com' pelo seu domínio real no PythonAnywhere
+ALLOWED_HOSTS = ['GlailtonNascimento88.pythonanywhere.com', 'localhost']
 
 
 # Aplicativos instalados no projeto
@@ -36,6 +38,7 @@ INSTALLED_APPS = [
 # Middleware: Camadas intermediárias que processam requisições e respostas
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # ADICIONADO PARA SERVIR ARQUIVOS ESTÁTICOS EM PRODUÇÃO
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -46,7 +49,7 @@ MIDDLEWARE = [
 ]
 
 # Arquivo principal de rotas (urls.py)
-ROOT_URLCONF = 'SistemaDeReservas.urls' # ALTERADO AQUI
+ROOT_URLCONF = 'SistemaDeReservas.urls'
 
 # Configurações de template HTML
 TEMPLATES = [
@@ -66,18 +69,18 @@ TEMPLATES = [
 ]
 
 # Ponto de entrada para servidores WSGI (produção)
-WSGI_APPLICATION = 'SistemaDeReservas.wsgi.application' # ALTERADO AQUI
+WSGI_APPLICATION = 'SistemaDeReservas.wsgi.application'
 
 
-# Banco de dados SQLite (padrão para desenvolvimento)
+# Configuração do Banco de Dados MySQL para PythonAnywhere
 DATABASES = {
    'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_db',
-        'USER': 'root',
-        'PASSWORD': '@123',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': 'GlailtonNascimento88$default', # <--- USE O NOME EXATO DO SEU BANCO DE DADOS NO PYTHONANYWHERE
+        'USER': 'GlailtonNascimento88', # <--- USE SEU NOME DE USUÁRIO DO PYTHONANYWHERE
+        'PASSWORD': '@Geo2020', # <--- COLOQUE A SENHA REAL QUE VOCÊ ANOTOU AQUI!
+        'HOST': 'glailtonnascimento88.mysql.pythonanywhere-services.com', # <--- USE O ENDEREÇO DO HOST DO PA
+        'PORT': '3306', # Pode manter 3306
         'OPTIONS': {
                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
@@ -110,6 +113,7 @@ LOCALE_PATHS = [
 # Configurações de arquivos estáticos (CSS, JavaScript, imagens)
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # DIRETÓRIO PARA COLETAR ARQUIVOS ESTÁTICOS EM PRODUÇÃO
 
 
 # Campo padrão para chaves primárias nos modelos

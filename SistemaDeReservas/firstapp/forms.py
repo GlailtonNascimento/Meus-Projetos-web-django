@@ -3,47 +3,65 @@
 import re
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError # Importe ValidationError
+from django.core.exceptions import ValidationError
+from django.conf import settings # Importe as configurações do Django
 
-from .models import MenuItem, Reservation, CPFStatus # Certifique-se de importar CPFStatus
+# LINHA PARA DEBUG: Verifique o valor de DEBUG no console ao iniciar o servidor
+print(f"DEBUG está definido como: {settings.DEBUG}")
 
-# --- FUNÇÃO DE VALIDAÇÃO DE CPF ---
+from .models import MenuItem, Reservation, CPFStatus 
+
+# --- FUNÇÃO DE VALIDAÇÃO DE CPF (CONDICIONAL: TESTE vs. PRODUÇÃO) ---
 def validate_cpf(value):
     # Remove caracteres não numéricos ANTES de qualquer validação.
     # O valor retornado por esta função será o CPF LIMPO.
     cpf_cleaned = re.sub(r'[^0-9]', '', value) 
 
-    if len(cpf_cleaned) != 11:
-        # Usando _() para internacionalização, mas o texto é claro
-        raise ValidationError(_('CPF deve conter 11 dígitos numéricos.'), code='invalid_length')
+    # --- LÓGICA DE VALIDAÇÃO CONDICIONAL ---
+    if settings.DEBUG:
+        # Se DEBUG for True (ambiente de desenvolvimento/teste)
+        # Permite qualquer sequência de 11 dígitos para testes
+        if len(cpf_cleaned) != 11:
+            raise ValidationError(_('CPF de teste deve conter 11 dígitos numéricos.'), code='invalid_test_length')
+        
+        # Opcional: Adicione outras regras mínimas para testes se desejar, por exemplo, não permitir vazio
+        if not cpf_cleaned.strip():
+            raise ValidationError(_('CPF de teste não pode ser vazio.'), code='empty_test_cpf')
 
-    # Verifica CPFs com todos os dígitos iguais (ex: "11111111111")
-    if cpf_cleaned in [s * 11 for s in [str(i) for i in range(10)]]:
-        raise ValidationError(_('CPF inválido.'), code='invalid_sequence')
+        return cpf_cleaned # Retorna o CPF limpo para testes
+    
+    else:
+        # Se DEBUG for False (ambiente de produção)
+        # Aplica a validação completa do CPF
+        if len(cpf_cleaned) != 11:
+            raise ValidationError(_('CPF deve conter 11 dígitos numéricos.'), code='invalid_length')
 
-    # Validação do primeiro dígito verificador
-    soma = 0
-    for i in range(9):
-        soma += int(cpf_cleaned[i]) * (10 - i)
-    resto = 11 - (soma % 11)
-    digito1 = 0 if resto > 9 else resto
+        # Verifica CPFs com todos os dígitos iguais (ex: "11111111111")
+        if cpf_cleaned in [s * 11 for s in [str(i) for i in range(10)]]:
+            raise ValidationError(_('CPF inválido.'), code='invalid_sequence')
 
-    if digito1 != int(cpf_cleaned[9]):
-        raise ValidationError(_('CPF inválido.'), code='invalid_first_digit')
+        # Validação do primeiro dígito verificador
+        soma = 0
+        for i in range(9):
+            soma += int(cpf_cleaned[i]) * (10 - i)
+        resto = 11 - (soma % 11)
+        digito1 = 0 if resto > 9 else resto
 
-    # Validação do segundo dígito verificador
-    soma = 0
-    for i in range(10):
-        soma += int(cpf_cleaned[i]) * (11 - i)
-    resto = 11 - (soma % 11)
-    digito2 = 0 if resto > 9 else resto
+        if digito1 != int(cpf_cleaned[9]):
+            raise ValidationError(_('CPF inválido.'), code='invalid_first_digit')
 
-    if digito2 != int(cpf_cleaned[10]):
-        raise ValidationError(_('CPF inválido.'), code='invalid_second_digit')
+        # Validação do segundo dígito verificador
+        soma = 0
+        for i in range(10):
+            soma += int(cpf_cleaned[i]) * (11 - i)
+        resto = 11 - (soma % 11)
+        digito2 = 0 if resto > 9 else resto
 
-    # Se todas as validações passarem, retorna o CPF LIMPO.
-    # Isso é importante porque o campo no modelo espera o CPF limpo.
-    return cpf_cleaned 
+        if digito2 != int(cpf_cleaned[10]):
+            raise ValidationError(_('CPF inválido.'), code='invalid_second_digit')
+
+        return cpf_cleaned # Retorna o CPF limpo validado para produção
+
 # --- FIM DA FUNÇÃO DE VALIDAÇÃO DE CPF ---
 
 
@@ -67,7 +85,7 @@ class ReservationForm(forms.ModelForm):
         label=_('CPF'), # Define o label para o campo
         help_text=_("Insira apenas números (11 dígitos). Pontos e hífens serão ignorados."), # Dica para o usuário
         widget=forms.TextInput(attrs={'placeholder': '12345678900'}), # O placeholder desejado
-        validators=[validate_cpf] # Aplica a validação complexa que você já tem
+        validators=[validate_cpf] # Aplica a validação CONDICIONAL aqui
     )
 
     class Meta:
@@ -77,7 +95,7 @@ class ReservationForm(forms.ModelForm):
         labels = {
             'first_name': _('Nome'),
             'last_name': _('Sobrenome'),
-            # 'cpf': _('CPF'), # Não precisa definir o label aqui se já está em forms.CharField acima
+            # 'cpf': _('CPF'), 
             'email': _('E-mail'),
             'contact': _('Contato'),
             'guest_count': _('Número de Convidados'),
@@ -104,7 +122,7 @@ class CPFSearchForm(forms.Form):
         max_length=14, # Manter max_length para permitir formatação (ex: 123.456.789-00)
         help_text=_("Insira apenas números (11 dígitos)."), # Dica para o usuário
         widget=forms.TextInput(attrs={'placeholder': '12345678900'}), # O placeholder desejado
-        validators=[validate_cpf] # Adiciona o validador diretamente ao campo
+        validators=[validate_cpf] # Aplica a validação CONDICIONAL aqui
     )
 
     # Não precisamos de um clean_cpf aqui se validate_cpf já faz o trabalho de limpeza e validação.
